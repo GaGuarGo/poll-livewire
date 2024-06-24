@@ -10,30 +10,36 @@ class CreatePoll extends Component
 
     public $title;
     public $options = ['First'];
+
     public function render()
     {
         return view('livewire.create-poll');
     }
 
-    public function addOption(): void {
+    public function addOption(): void
+    {
         $this->options[] = '';
     }
 
-    public function removeOption($index): void {
+    public function removeOption($index): void
+    {
         unset($this->options[$index]);
-        $this-> options = array_values($this->options);
+        $this->options = array_values($this->options);
     }
 
-    public function createPoll(): void {
-        $poll = Poll::create([
+    public function createPoll(): void
+    {
+        Poll::create([
             'title' => $this->title,
-        ]);
+        ])->options()->createMany(
+            collect($this->options)->map(fn($option) => ['name' => $option])->all()
+        );
 
-        foreach($this->options as $optionName) {
-            $poll->options()->create(['name' => $optionName]);
-        }
+//        foreach($this->options as $optionName) {
+//            $poll->options()->create(['name' => $optionName]);
+//        }
 
-        $this->reset(['title' , 'options']);
+        $this->reset(['title', 'options']);
     }
 
 
