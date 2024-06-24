@@ -2,7 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Models\Option;
 use App\Models\Poll;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class Polls extends Component
@@ -17,5 +19,10 @@ class Polls extends Component
     {
         $polls = Poll::with('options.votes')->latest()->get();
         return view('livewire.polls', ['polls' => $polls]);
+    }
+
+    public function vote(Option $option): void
+    {
+        $option->votes()->create();
     }
 }
